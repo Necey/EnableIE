@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnableIE", "EnableIE\EnableIE.csproj", "{98AC49B6-1403-4EA5-877A-37ACB16A0463}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{98AC49B6-1403-4EA5-877A-37ACB16A0463}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98AC49B6-1403-4EA5-877A-37ACB16A0463}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98AC49B6-1403-4EA5-877A-37ACB16A0463}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98AC49B6-1403-4EA5-877A-37ACB16A0463}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {21002DA8-D6DB-474B-8BDD-274DB7C1DF77}
+	EndGlobalSection
+EndGlobal

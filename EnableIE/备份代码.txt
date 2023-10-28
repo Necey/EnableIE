@@ -1,0 +1,166 @@
+private void button3_Click(object sender, EventArgs e)
+        {
+            string filePath = @"C:\Windows\System32\ieframe.dll";
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = "cmd.exe";
+                startInfo.Arguments = $"/c takeown /f {filePath} && icacls {filePath} /grant {Environment.UserName}:(F)";
+                startInfo.UseShellExecute = true;
+                startInfo.Verb = "runas"; // 请求管理员权限
+                startInfo.CreateNoWindow = true; // 隐藏窗口
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden; // 隐藏窗口
+
+                Process process = new Process();
+                process.StartInfo = startInfo;
+                process.Start();
+
+                process.WaitForExit();
+
+                if (process.ExitCode == 0)
+                {
+                    string username = Environment.UserName;
+                    MessageBox.Show($"文件权限已设置！当前用户名为: {username}");
+                }
+                else
+                {
+                    MessageBox.Show("命令执行失败！");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("文件操作失败：" + ex.Message);
+            }
+        }
+
+
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string filePath = @"C:\Windows\System32\ieframe.dll";
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = "cmd.exe";
+                startInfo.Arguments = $"/c icacls {filePath} /setowner \"NT SERVICE\\TrustedInstaller\" && icacls {filePath} /inheritance:d /remove:g administrators && icacls {filePath} /grant:r {Environment.UserName}:(RX)";
+                startInfo.UseShellExecute = true;
+                startInfo.Verb = "runas"; // 请求管理员权限
+                startInfo.CreateNoWindow = true; // 隐藏窗口
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden; // 隐藏窗口
+
+                Process process = new Process();
+                process.StartInfo = startInfo;
+                process.Start();
+
+                process.WaitForExit();
+
+                if (process.ExitCode == 0)
+                {
+                    string username = Environment.UserName;
+                    MessageBox.Show($"文件权限已设置！当前用户名为: {username}");
+                }
+                else
+                {
+                    MessageBox.Show("命令执行失败！");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("文件操作失败：" + ex.Message);
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            string url = "https://soft.huoru.cn/ieframe.dll";
+            string savePath = @"C:\ieframe.dll";
+
+            WebClient client = new WebClient();
+            client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
+
+            // 异步下载文件
+            client.DownloadFileAsync(new Uri(url), savePath);
+        }
+
+        private void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                MessageBox.Show("文件下载失败：" + e.Error.Message);
+                return;
+            }
+
+            MessageBox.Show("文件下载完成！");
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            FrmTips.ShowTipsError(this, "Error提示信息");
+            FrmTips.ShowTipsInfo(this, "Info提示信息");
+            FrmTips.ShowTipsSuccess(this, "Success提示信息");
+            FrmTips.ShowTipsWarning(this, "文件下载失败：" + ex.Message);
+            FrmTips.ShowTips(this, "自定义提示信息", 2000, true, ContentAlignment.BottomRight, null, TipsSizeMode.Medium, new Size(300, 50), TipsState.Success);
+        }
+
+/// <summary>
+        /// 从兼容性列表中删除一个网站。
+        /// </summary>
+        /// <param name="domain">要删除网站</param>
+        private void RemoveUserFilter(string domain)
+        {
+            String[] domains = GetDomains();
+            if (!ArrayContains(domains, domain))
+            {
+                return;
+            }
+            using (RegistryKey regkey = Registry.CurrentUser.OpenSubKey(CLEARABLE_LIST_DATA, true))
+            {
+                object oldData = regkey.GetValue(USERFILTER);
+                if (oldData != null)
+                {
+                    byte[] filter = oldData as byte[];
+                    byte[] newReg = GetRemovedValue(domain, filter);
+
+                    if (GetDomains(newReg).Length == 0)
+                        regkey.DeleteValue(USERFILTER);
+                    else
+                        regkey.SetValue(USERFILTER, newReg, RegistryValueKind.Binary);
+                }
+            }
+        }
+
+/// <summary>
+        /// 得到一个网站的存储的数据
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        private byte[] GetRemovedValue(string domain, byte[] filter)
+        {
+            byte[] newReg;
+            int length;
+            int offset_filter = 24;
+            int offset_newReg = 0;
+            int totalSize = filter.Length;
+
+            newReg = new byte[totalSize];
+            Array.Copy(filter, 0, newReg, 0, offset_filter);
+            offset_newReg += offset_filter;
+
+            while (offset_filter < totalSize)
+            {
+                length = BitConverter.ToUInt16(filter, offset_filter + 16);
+                if (domain != System.Text.Encoding.Unicode.GetString(filter, offset_filter + 16 + 2, length * 2))
+                {
+                    Array.Copy(filter, offset_filter, newReg, offset_newReg, 16 + 2 + length * 2);
+                    offset_newReg += 16 + 2 + length * 2;
+                }
+                offset_filter += 16 + 2 + length * 2;
+            }
+            Array.Resize(ref newReg, offset_newReg);
+            byte[] newSize = BitConverter.GetBytes((UInt16)(offset_newReg - 12));
+            newReg[12] = newSize[0];
+            newReg[13] = newSize[1];
+
+            return newReg;
+        }
